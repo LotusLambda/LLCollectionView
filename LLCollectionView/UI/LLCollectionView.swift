@@ -3,7 +3,13 @@ import SwiftUI
 public struct LLCollectionView: UIViewRepresentable {
     @ObservedObject var viewModel: ViewModel
     
-    public init(viewModel: ViewModel) {
+    public init<Content: View>(
+        viewModel: ViewModel,
+        @ViewBuilder view: @escaping (LLSection, LLItem, IndexPath) -> Content
+    ) {
+        viewModel.viewBlock = { (section, item, indexPath) in
+            return AnyView(view(section, item, indexPath))
+        }
         self.viewModel = viewModel
     }
     
@@ -15,7 +21,19 @@ public struct LLCollectionView: UIViewRepresentable {
         
     }
     
-    public func makeCoordinator() -> () {
+    public static func dismantleUIView(_ uiView: Self.UIViewType, coordinator: Self.Coordinator) {
+//        coordinator.sections = []
+    }
+    
+    public func makeCoordinator() -> ViewModel {
+        viewModel
+    }
+}
+
+extension LLCollectionView {
+    public func insetsForSection(_ insets: @escaping (Int) -> UIEdgeInsets) -> Self {
+        self.viewModel.insetsBlock = insets
         
+        return self
     }
 }

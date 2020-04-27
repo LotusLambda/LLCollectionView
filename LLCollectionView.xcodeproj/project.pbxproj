@@ -18,9 +18,8 @@
 		3827EE07245673E9005E4CC4 /* LLCollectionView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3827EDE224567343005E4CC4 /* LLCollectionView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3827EE0D245673FC005E4CC4 /* LLCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE0C245673FC005E4CC4 /* LLCollectionView.swift */; };
 		3827EE0F24567435005E4CC4 /* LLCollectionView_ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE0E24567435005E4CC4 /* LLCollectionView_ViewModel.swift */; };
-		3827EE122456746A005E4CC4 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE112456746A005E4CC4 /* Model.swift */; };
-		3827EE142456750B005E4CC4 /* Model_Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE132456750B005E4CC4 /* Model_Section.swift */; };
-		3827EE162456751C005E4CC4 /* Model_Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE152456751C005E4CC4 /* Model_Item.swift */; };
+		3827EE142456750B005E4CC4 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE132456750B005E4CC4 /* Section.swift */; };
+		3827EE162456751C005E4CC4 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE152456751C005E4CC4 /* Item.swift */; };
 		3827EE1824567A6B005E4CC4 /* LLCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3827EE1724567A6B005E4CC4 /* LLCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,9 +61,8 @@
 		3827EE01245673E3005E4CC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3827EE0C245673FC005E4CC4 /* LLCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLCollectionView.swift; sourceTree = "<group>"; };
 		3827EE0E24567435005E4CC4 /* LLCollectionView_ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLCollectionView_ViewModel.swift; sourceTree = "<group>"; };
-		3827EE112456746A005E4CC4 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		3827EE132456750B005E4CC4 /* Model_Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model_Section.swift; sourceTree = "<group>"; };
-		3827EE152456751C005E4CC4 /* Model_Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model_Item.swift; sourceTree = "<group>"; };
+		3827EE132456750B005E4CC4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		3827EE152456751C005E4CC4 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		3827EE1724567A6B005E4CC4 /* LLCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -159,9 +157,8 @@
 		3827EE1024567462005E4CC4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3827EE112456746A005E4CC4 /* Model.swift */,
-				3827EE132456750B005E4CC4 /* Model_Section.swift */,
-				3827EE152456751C005E4CC4 /* Model_Item.swift */,
+				3827EE132456750B005E4CC4 /* Section.swift */,
+				3827EE152456751C005E4CC4 /* Item.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -280,12 +277,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3827EE122456746A005E4CC4 /* Model.swift in Sources */,
 				3827EE0F24567435005E4CC4 /* LLCollectionView_ViewModel.swift in Sources */,
-				3827EE162456751C005E4CC4 /* Model_Item.swift in Sources */,
+				3827EE162456751C005E4CC4 /* Item.swift in Sources */,
 				3827EE0D245673FC005E4CC4 /* LLCollectionView.swift in Sources */,
 				3827EE1824567A6B005E4CC4 /* LLCollectionViewCell.swift in Sources */,
-				3827EE142456750B005E4CC4 /* Model_Section.swift in Sources */,
+				3827EE142456750B005E4CC4 /* Section.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

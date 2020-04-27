@@ -1,65 +1,56 @@
 import SwiftUI
 
-class LLCollectionViewCell: UICollectionViewCell {
-    var host: UIHostingController<AnyView>?
+struct LLCollectionViewCellContentView: View {
+    class ViewModel: ObservableObject {
+        @Published var view: AnyView?
+    }
+    
+    @ObservedObject var viewModel: ViewModel
+    
+    var body: some View {
+        ZStack {
+            viewModel.view
+        }
+    }
 }
-/*
+
 class LLCollectionViewCell: UICollectionViewCell {
-    class Model: ObservableObject {
-        @Published var view: AnyView? = nil
-    }
+    lazy var host = UIHostingController(rootView: LLCollectionViewCellContentView(viewModel: viewModel))
+    private let viewModel = LLCollectionViewCellContentView.ViewModel()
     
-    struct ContentView: View {
-        @ObservedObject var model: Model
-        
-        init(model: Model) {
-            self.model = model
+    var view: AnyView? {
+        get {
+            viewModel.view
         }
-        
-        var body: some View {
-            VStack {
-                HStack {
-                    self.model.view
-                }
-            }
+        set {
+            viewModel.view = newValue
         }
     }
     
-    lazy var width: NSLayoutConstraint = {
-        let width = contentView.widthAnchor.constraint(equalToConstant: bounds.size.width)
-        width.isActive = true
-        return width
-    }()
-    
-    let model = Model()
-    lazy var controller = UIHostingController(rootView: ContentView(model: self.model))
-    
-    override init(frame: CGRect) {
+    override init(frame: CGRect) {        
         super.init(frame: frame)
         
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.backgroundColor = .red
+        let cellContent = self.host.view!
         
-        let uiView = controller.view!
+        cellContent.backgroundColor = .clear
         
-        uiView.translatesAutoresizingMaskIntoConstraints = false
-        uiView.backgroundColor = .clear
-//        uiView.frame = contentView.bounds
-        let size = uiView.sizeThatFits(UIScreen.main.bounds.size)
+        cellContent.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(cellContent)
         
-        print("Frame: ", uiView.frame, size)
-        contentView.addSubview(uiView)
-        
-        uiView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        uiView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
-        uiView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
-        contentView.bottomAnchor.constraint(equalTo: uiView.bottomAnchor).isActive = true
-        
+        cellContent.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        cellContent.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
+        cellContent.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
+        cellContent.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
     required init?(coder: NSCoder) {
         fatalError()
     }
-
+    
+    override func willMove(toSuperview newSuperview: UIView?) {
+        if newSuperview != nil {
+            host.view.sizeToFit()
+        }
+    }
+    
 }
-*/
