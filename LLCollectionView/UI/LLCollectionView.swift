@@ -1,39 +1,60 @@
 import SwiftUI
 
 public struct LLCollectionView: UIViewRepresentable {
-    @ObservedObject var viewModel: ViewModel
-    
-    public init<Content: View>(
-        viewModel: ViewModel,
-        @ViewBuilder view: @escaping (LLSection, LLItem, IndexPath) -> Content
+    @ObservedObject var viewModel: LLCollectionViewModel
+
+    public init(
+        viewModel: LLCollectionViewModel
     ) {
-        viewModel.viewBlock = { (section, item, indexPath) in
-            return AnyView(view(section, item, indexPath))
-        }
+        print("Init Collection view")
+       
         self.viewModel = viewModel
     }
     
     public func makeUIView(context: Context) -> UICollectionView {
-        viewModel.view
+        print("Make Collection view")
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInsetReference = .fromContentInset
+//            layout.sectionInset = .zero
+        
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.delegate = context.coordinator
+        view.insetsLayoutMarginsFromSafeArea = false
+        view.backgroundColor = .clear
+//            view.insetsLayoutMarginsFromSafeArea = false
+        
+        view.register(LLCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        context.coordinator.view = view
+
+        view.dataSource = context.coordinator.dataSource
+        
+        return view
     }
     
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
+        print("Update Collection view")
+        context.coordinator.view = uiView
         
+        context.coordinator.reloadData()
     }
     
     public static func dismantleUIView(_ uiView: Self.UIViewType, coordinator: Self.Coordinator) {
-//        coordinator.sections = []
+        print("Dismantle Collection view")
     }
     
-    public func makeCoordinator() -> ViewModel {
-        viewModel
-    }
-}
-
-extension LLCollectionView {
-    public func insetsForSection(_ insets: @escaping (Int) -> UIEdgeInsets) -> Self {
-        self.viewModel.insetsBlock = insets
+    public func makeCoordinator() -> LLCollectionViewModel {
+        print("Make Coordinator")
         
-        return self
+        return viewModel
     }
 }
+//
+//extension LLCollectionView {
+//    public func insetsForSection(_ insets: @escaping (Int) -> UIEdgeInsets) -> Self {
+//        self.viewModel.insetsBlock = insets
+//
+//        return self
+//    }
+//}
+

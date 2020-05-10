@@ -2,8 +2,7 @@ import SwiftUI
 import LLCollectionView
 
 struct ContentView: View {
-    @ObservedObject var viewModel = LLCollectionView.ViewModel()
-    @ObservedObject var viewModel2 = LLCollectionView.ViewModel()
+    @ObservedObject var viewModel = LLCollectionView.LLCollectionViewModel()
 
     @State var isShowing = true
     

@@ -1,31 +1,22 @@
 import SwiftUI
 
-struct LLCollectionViewCellContentView: View {
-    class ViewModel: ObservableObject {
-        @Published var view: AnyView?
-    }
-    
-    @ObservedObject var viewModel: ViewModel
-    
-    var body: some View {
-        ZStack {
-            viewModel.view
-        }
-    }
-}
+//struct LLCollectionViewCellContentView: View {
+//    class ViewModel: ObservableObject {
+//        @Published var view: AnyView?
+//        var loadedId: String?
+//    }
+//
+//    @ObservedObject var viewModel: ViewModel
+//
+//    var body: some View {
+//        ZStack {
+//            viewModel.view
+//        }
+//    }
+//}
 
 class LLCollectionViewCell: UICollectionViewCell {
-    lazy var host = UIHostingController(rootView: LLCollectionViewCellContentView(viewModel: viewModel))
-    private let viewModel = LLCollectionViewCellContentView.ViewModel()
-    
-    var view: AnyView? {
-        get {
-            viewModel.view
-        }
-        set {
-            viewModel.view = newValue
-        }
-    }
+    let host = UIHostingController(rootView: AnyView(EmptyView()))
     
     override init(frame: CGRect) {        
         super.init(frame: frame)
