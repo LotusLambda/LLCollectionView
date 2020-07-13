@@ -3,7 +3,7 @@ import Combine
 
 extension LLCollectionView {
     public class LLCollectionViewModel: NSObject, ObservableObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-        unowned var view: UICollectionView!
+        weak var view: UICollectionView?
         let viewBlock: ((LLSection, LLItem, IndexPath) -> AnyView)?
         var insetsBlock: ((Int) -> UIEdgeInsets)?
         
@@ -11,6 +11,34 @@ extension LLCollectionView {
         private var _didSelectItemSubject = PassthroughSubject<(UICollectionView, IndexPath), Never>()
         
         @Published public var initialIndexPath: IndexPath?
+        private var initialIndexPathWasSet = false
+        
+        public var bounces: Bool {
+            get {
+                self.view?.bounces ?? true
+            }
+            set {
+                self.view?.bounces = newValue
+            }
+        }
+        
+        public var showsVerticalScrollIndicator: Bool {
+            get {
+                self.view?.showsVerticalScrollIndicator ?? true
+            }
+            set {
+                self.view?.showsVerticalScrollIndicator = newValue
+            }
+        }
+        
+        public var showsHorizontalScrollIndicator: Bool {
+            get {
+                self.view?.showsHorizontalScrollIndicator ?? true
+            }
+            set {
+                self.view?.showsHorizontalScrollIndicator = newValue
+            }
+        }
         
 //        public var initialIndexPath: IndexPath? {
 //            didSet {
@@ -28,7 +56,7 @@ extension LLCollectionView {
         
         public func scrollToItem(at indexPath: IndexPath, at scrollPosition: UICollectionView.ScrollPosition, animated: Bool) {
             DispatchQueue.main.async {
-                self.view.scrollToItem(at: indexPath, at: scrollPosition, animated: animated)
+                self.view?.scrollToItem(at: indexPath, at: scrollPosition, animated: animated)
             }
         }
         
@@ -72,7 +100,7 @@ extension LLCollectionView {
         lazy var dataSource: UICollectionViewDiffableDataSource<String, String> = {
             print("Init datasource")
             
-            return UICollectionViewDiffableDataSource<String, String>(collectionView: view) { [weak self] (collectionView, indexPath, reuseIdentifier) -> UICollectionViewCell? in
+            return UICollectionViewDiffableDataSource<String, String>(collectionView: view!) { [weak self] (collectionView, indexPath, reuseIdentifier) -> UICollectionViewCell? in
                     guard let self = self else { return nil }
                     
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! LLCollectionViewCell
@@ -101,7 +129,14 @@ extension LLCollectionView {
         }
         
         public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            sections[indexPath.section].items[indexPath.item].size(collectionView)
+            if
+                let section = sections[safe: indexPath.section],
+                let item = section.items[safe: indexPath.item]
+            {
+                return item.size(collectionView)
+            }
+            
+            return .zero
         }
         
         public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -125,17 +160,22 @@ extension LLCollectionView {
         }
         
         public func reloadData() {
-            guard let view = view else { return }
-            print("Reloading data", self.sections.count)
-            
+            guard
+                view != nil
+            else { return }
+                        
+            print("Reloading data", self.sections.count, self.view!)
+
+            let sections = self.sections
+
             DispatchQueue.global(qos: .background).async { [weak self] in
                 guard let self = self else { return }
                 
                 var snapshot = NSDiffableDataSourceSnapshot<String, String>()
                 
-                snapshot.appendSections(self.sections.map { $0.reuseIdentifier })
+                snapshot.appendSections(sections.map { $0.reuseIdentifier })
                 
-                self.sections.forEach { (section) in
+                sections.forEach { (section) in
                     snapshot.appendItems(section.items.map { item in
                         let reuseIdentifier = section.reuseIdentifier + item.reuseIdentifier
                         
@@ -143,21 +183,31 @@ extension LLCollectionView {
                     }, toSection: section.reuseIdentifier)
                 }
                 
-                self.dataSource.apply(snapshot, animatingDifferences: true, completion: {
-                    if let indexPath = self.initialIndexPath {
-                        DispatchQueue.main.async {
-                            self.view.scrollToItem(at: indexPath, at: .left, animated: false)
+                func scroll() {
+                    if
+                        !self.initialIndexPathWasSet,
+                        let indexPath = self.initialIndexPath {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.view?.scrollToItem(at: indexPath, at: .left, animated: false)
+                            self?.initialIndexPathWasSet = true
                         }
                     }
+                }
+                
+                self.dataSource.apply(snapshot, animatingDifferences: true, completion: {
+                    scroll()
                 })
                 
-                if let indexPath = self.initialIndexPath {
-                    DispatchQueue.main.async {
-                        self.view.scrollToItem(at: indexPath, at: .left, animated: false)
-                    }
-                }
+                scroll()
             }
         }
 
+    }
+}
+
+extension Collection {
+    /// Returns the element at the specified index if it is within bounds, otherwise nil.
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }

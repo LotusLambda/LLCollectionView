@@ -1,20 +1,5 @@
 import SwiftUI
 
-//struct LLCollectionViewCellContentView: View {
-//    class ViewModel: ObservableObject {
-//        @Published var view: AnyView?
-//        var loadedId: String?
-//    }
-//
-//    @ObservedObject var viewModel: ViewModel
-//
-//    var body: some View {
-//        ZStack {
-//            viewModel.view
-//        }
-//    }
-//}
-
 class LLCollectionViewCell: UICollectionViewCell {
     let host = UIHostingController(rootView: AnyView(EmptyView()))
     
@@ -38,10 +23,10 @@ class LLCollectionViewCell: UICollectionViewCell {
         fatalError()
     }
     
-    override func willMove(toSuperview newSuperview: UIView?) {
-        if newSuperview != nil {
-            host.view.sizeToFit()
-        }
-    }
+//    override func willMove(toSuperview newSuperview: UIView?) {
+//        if newSuperview != nil {
+//            host.view.sizeToFit()
+//        }
+//    }
     
 }

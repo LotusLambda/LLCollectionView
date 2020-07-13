@@ -2,7 +2,9 @@ import SwiftUI
 
 public struct LLCollectionView: UIViewRepresentable {
     @ObservedObject var viewModel: LLCollectionViewModel
-
+    
+    let layout = UICollectionViewFlowLayout()
+    
     public init(
         viewModel: LLCollectionViewModel
     ) {
@@ -13,17 +15,18 @@ public struct LLCollectionView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UICollectionView {
         print("Make Collection view")
-        let layout = UICollectionViewFlowLayout()
+        
         layout.scrollDirection = .horizontal
         layout.sectionInsetReference = .fromContentInset
-//            layout.sectionInset = .zero
+        layout.sectionInset = .zero
         
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.delegate = context.coordinator
         view.insetsLayoutMarginsFromSafeArea = false
         view.backgroundColor = .clear
-//            view.insetsLayoutMarginsFromSafeArea = false
-        
+        view.bounces = viewModel.bounces
+        view.showsVerticalScrollIndicator = viewModel.showsVerticalScrollIndicator
+        view.showsHorizontalScrollIndicator = viewModel.showsHorizontalScrollIndicator
         view.register(LLCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         context.coordinator.view = view
 
@@ -47,6 +50,32 @@ public struct LLCollectionView: UIViewRepresentable {
         print("Make Coordinator")
         
         return viewModel
+    }
+}
+
+extension LLCollectionView {
+    public func sectionInsetReference(_ sectionInsetReference: UICollectionViewFlowLayout.SectionInsetReference) -> Self {
+        self.layout.sectionInsetReference = sectionInsetReference
+        
+        return self
+    }
+    
+    public func bounces(_ bounces: Bool) -> Self {
+        self.viewModel.bounces = bounces
+        
+        return self
+    }
+    
+    public func showsVerticalScrollIndicator(_ showsVerticalScrollIndicator: Bool) -> Self {
+        self.viewModel.showsVerticalScrollIndicator = showsVerticalScrollIndicator
+        
+        return self
+    }
+    
+    public func showsHorizontalScrollIndicator(_ showsHorizontalScrollIndicator: Bool) -> Self {
+        self.viewModel.showsHorizontalScrollIndicator = showsHorizontalScrollIndicator
+        
+        return self
     }
 }
 //
