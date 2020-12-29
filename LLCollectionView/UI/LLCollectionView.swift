@@ -17,7 +17,7 @@ public struct LLCollectionView: UIViewRepresentable {
         print("Make Collection view")
         
         layout.scrollDirection = .horizontal
-        layout.sectionInsetReference = .fromContentInset
+        layout.sectionInsetReference = .fromSafeArea
         layout.sectionInset = .zero
         
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
