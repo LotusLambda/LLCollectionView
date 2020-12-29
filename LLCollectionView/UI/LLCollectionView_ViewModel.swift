@@ -108,6 +108,7 @@ extension LLCollectionView {
                     let section = self.sections[indexPath.section]
                     let item = section.items[indexPath.item]
                     cell.host.rootView = self.viewBlock?(section, item, indexPath) ?? AnyView(EmptyView())
+                    cell.host.disableSafeArea()
     //                if item.reuseIdentifier != cell.viewModel.loadedId {
     //                    let view = self.viewBlock?(section, item, indexPath) ?? AnyView(EmptyView())
     //                    let frame = cell.bounds
